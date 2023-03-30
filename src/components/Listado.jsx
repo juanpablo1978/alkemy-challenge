@@ -1,33 +1,71 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react';
+import Login from './Login';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+/*import swal from '@sweetalert/with-react';*/
 
 const Listado = () => {
   
-  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  const URL = "https://rickandmortyapi.com/api/character/"
+  const [cardList, setcardList] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-      if (token === null) {
-        navigate('/')
-      }
-  }, [navigate]);
-
-  return (
+    axios.get(URL)
+    .then(response => {
+      const apiData = response.data;
+      setcardList(apiData.results);
+    })
+   /* catch(error => {
+       swal(<h2>Error, intentelo nuevamente</h2>)
+    })*/
     
-    <main className='bg-black min-h-screen flex justify-center 
-    items-center border-t-4 border-b-4 border-teal-700'>
-      <article className='w-48 h-96 rounded-xl bg-slate-50'>
-        <div className='w-full h-36 rounded-xl overflow-hidden'>
-            <img className='w-full h-full object-cover' src= 'https://images.pexels.com/photos/5662857/pexels-photo-5662857.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' alt="imagen pelicula" />
-        </div>
-        <div className='flex flex-col p-3'>
-        <h3 className='text-black text-xl font-semibold pb-2'>Título</h3>
-          <p className='text-black text-[14px]'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora velit eveniet enim quidem, explicabo odio, ut laudantium eos tenetur repellendus dolor. Voluptas eos dolore.</p>
-        </div>  
-      </article>
-    </main>
+  }, [setcardList])
+    
+  console.log(cardList);
+  
+  
+
+
+  
+
+  return !token ?(
+      <Login/>
+    ) : (
+
+      <main className='bg-black min-h-screen flex flex-wrap gap-20 justify-center py-14'>
+
+        {
+          cardList.map((oneCard, id) => {
+            return(
+
+              <section>
+              <article className='w-56 h-[390px] rounded-xl bg-slate-200 shadow-2xl' key={id}>
+              <div className='w-full h-44 rounded-xl overflow-hidden object-cover'>
+                  <img className='w-full h-full object-cover'
+                  src= {oneCard.image} alt="imagen pelicula" />
+              </div>
+              <div className='flex flex-col p-4'>
+              <h3 className='text-black text-xl font-semibold pb-2 line-clamp-1'>{oneCard.name}</h3>
+                <p className='text-black text-[14px]'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint aspernatur voluptatem officiis ea nesciunt.</p>
+                <Link to={`/detail?id=${oneCard.id}`}>
+                <button className=' bg-black text-[12px] font-semibold uppercase text-white px-4 py-2
+                  rounded-3xl cursor-pointer my-4 ml-10'>View Detail</button>
+                </Link>
+              </div>  
+            </article>
+            </section>
+            )
+
+          })
+          
+        }
+      
+      </main>
+  
+
   )
-}
+};
 
 export default Listado

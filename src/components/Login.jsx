@@ -4,6 +4,8 @@ import swal from '@sweetalert/with-react';
 import { useNavigate } from 'react-router-dom';
 
 
+
+
 const Login = () => {
 
     const navigate = useNavigate();
@@ -33,17 +35,18 @@ const Login = () => {
         axios.post('http://challenge-react.alkemy.org', {email, password})
 
         .then(res => {
-            swal(<h2>Te logueaste correctamente</h2>);
+           /* swal(<h2>Te logueaste correctamente</h2>);*/
             const tokenRecibido = res.data.token;
             localStorage.setItem('token', tokenRecibido);
             navigate('/listado');
         })
-
     }
 
+
   return (
+    
     <main className='bg-black text-white min-h-screen flex justify-center 
-    items-center flex-col border-t-4 border-b-4 border-teal-700'>
+    items-center flex-col'>
         <form className='h-80 w-80 rounded-xl bg-black' onSubmit={handlerSubmit}>
             <h2 className='m-4 font-semibold text-2xl text-white ml-16'>Alkemy Challenge</h2>
             <div className='bg-black h-10 rounded-lg flex items-center px-4 my-6
@@ -66,6 +69,7 @@ const Login = () => {
             </button>
         </form>
     </main>
+
   )
 }
 
